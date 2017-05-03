@@ -3,16 +3,19 @@ package main
 import (
 	"net/http"
 	"route"
-	"log"
+	"gopkg.in/mgo.v2"
 )
 
 func main() {
+	// Connect to Mongo
+	s, dbError := mgo.Dial("mongodb://localhost")
+
 	// Create routes
-	route.Route()
-	
+	route.Route(s)
+
 	// Start server
-	err := http.ListenAndServe(":8080", nil)
+	serviceError := http.ListenAndServe(":8080", nil)
 	
 	// Log any error
-	log.Fatal(err)
+	panic(dbError || serviceError)
 }
